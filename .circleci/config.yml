@@ -1,14 +1,28 @@
 version: 2
+
+orbs:
+  singularity: singularity/singularity@1.0.4
+
 jobs:
   build:
-    docker:
-      - image: circleci/python:3.6.4 
-        environment:
-          PIPENV_VENV_IN_PROJECT: true
-          DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
+    parameters:
+        singularity:
+          type: string
+          description: "Singularity version"
+        singularity-3:
+          type: boolean
+          description: "Set to true for singularity 3, false for singularity 2"
+          default: true
+  # build:
+  #   docker:
+  #     - image: circleci/python:3.6.4 
+  #       environment:
+  #         PIPENV_VENV_IN_PROJECT: true
+  #         DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
     steps:
       - checkout
       - run: 
           command: |
             sudo pip install pipenv
             pipenv install requests
+            python get_container_list.py

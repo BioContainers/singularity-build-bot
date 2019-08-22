@@ -30,7 +30,7 @@ def get_quay_containers(repository='biocontainers'):
 
     return containers
 
-def get_singularity_containers():
+def get_singularity_containers(url="https://depot.galaxyproject.org/singularity/new/"):
     """
     Get all existing singularity containers from "https://depot.galaxyproject.org/singularity/"
     """
@@ -48,7 +48,7 @@ def get_singularity_containers():
                 pass
 
     parser = GetContainerNames()
-    index = requests.get("https://depot.galaxyproject.org/singularity/")
+    index = requests.get(url)
     parser.feed(index.text)
     return parser.containers
 
