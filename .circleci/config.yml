@@ -12,4 +12,5 @@ jobs:
           command: |
             sudo pip install pipenv
             pipenv install requests
+            pipenv shell
             python get_container_list.py
