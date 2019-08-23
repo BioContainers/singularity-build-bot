@@ -13,6 +13,7 @@ jobs:
           type: boolean
           description: "Set to true for singularity 3, false for singularity 2"
           default: true
+    machine: true
   # build:
   #   docker:
   #     - image: circleci/python:3.6.4 
