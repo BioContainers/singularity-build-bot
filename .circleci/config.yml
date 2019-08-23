@@ -27,4 +27,4 @@ jobs:
             # sudo pip install pipenv
             # pipenv install requests
             # pipenv run python get_container_list.py
-            bash test.build.sh
+            bash test-build.sh
