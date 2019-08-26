@@ -12,7 +12,8 @@ jobs:
       - checkout
       - run: 
           command: |
-            sudo pip install pipenv
-            pipenv install requests
-            pipenv run python get_container_list.py
-            # bash test-build.sh
+            sudo apt-get install -y singularity-container
+            # sudo pip install pipenv
+            # pipenv install requests
+            # pipenv run python get_container_list.py
+            bash test-build.sh
