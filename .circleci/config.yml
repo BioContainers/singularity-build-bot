@@ -16,7 +16,7 @@ jobs:
             sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
             sudo apt-get update
             sudo apt-get install -y singularity-container
-            # sudo pip install pipenv
-            # pipenv install requests
-            # pipenv run python get_container_list.py
-            bash test-build.sh
+            sudo pip install pipenv
+            pipenv install requests
+            pipenv run python get_container_list.py
+            bash build.sh
