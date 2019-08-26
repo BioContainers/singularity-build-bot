@@ -4,12 +4,17 @@
 #
 version: 2.1
 
+c2:6a:c7:6e:77:f0:71:cd:66:00:e0:59:d2:93:a9:2c
+
 jobs:
   build:
     machine:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "c2:6a:c7:6e:77:f0:71:cd:66:00:e0:59:d2:93:a9:2c"
       - run: 
           command: |
             sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
@@ -19,5 +24,6 @@ jobs:
             sudo pip install pipenv
             pipenv install requests
             pipenv run python get_container_list.py
+            # scp singularity_import/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
             bash build.sh
           no_output_timeout: 3h # takes a while to get the quay containers, hopefully not 3h though
