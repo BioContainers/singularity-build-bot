@@ -4,78 +4,15 @@
 #
 version: 2.1
 
-orbs:
-  singularity: singularity/singularity@1.0.4
-
-workflows:
-  version: 2
-  example:
-    jobs:
-      - build:
-          filters:
-            branches:
-              ignore: master
-          name: "Singularity 3.2.1 - Python 3"
-          singularity: 3.2.1
-          singularity-3: true
-
-
 jobs:
   build:
-    parameters:
-        singularity:
-          type: string
-          description: "Singularity version"
-        singularity-3:
-          type: boolean
-          description: "Set to true for singularity 3, false for singularity 2"
-          default: true
-    machine: true
-    working_directory: ~/repo
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v2-dependencies
-
-      - run:
-          name: install dependencies
-          command: | 
-            ls $HOME
-            if [ ! -d "/home/circleci/conda" ]; then
-                wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-                /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/conda
-                export PATH=$HOME/conda/bin:$PATH
-                conda install -y -c defaults -c conda-forge sregistry
-            else
-                echo "Miniconda is already installed, continuing to build."
-            fi
-            chmod u+x ~/repo/.circleci/*.sh
-      # Install Singularity
-      - when:
-          condition: << parameters.singularity-3 >>
-          steps:
-            - singularity/install-go:
-                go-version: 1.11.5
-            - singularity/debian-install-3:
-                      singularity-version: << parameters.singularity >>
-      - unless:
-          condition: << parameters.singularity-3 >>
-          steps:
-            - singularity/debian-install-2:
-                      singularity-version: << parameters.singularity >>
-
-      - save_cache:
-          paths:
-            - /home/circleci/conda
-          key: v2-dependencies
-
-
       - run: 
           command: |
-            # sudo pip install pipenv
-            # pipenv install requests
-            # pipenv run python get_container_list.py
-            bash test-build.sh
+            sudo pip install pipenv
+            pipenv install requests
+            pipenv run python get_container_list.py
+            # bash test-build.sh
