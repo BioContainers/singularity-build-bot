@@ -19,6 +19,6 @@ wget -q https://github.com/sylabs/singularity/releases/download/v3.3.0/singulari
 tar -xzf singularity-3.3.0.tar.gz
 cd ./singularity
 ./mconfig 1> /dev/null
-make -C -s ./builddir 1> /dev/null
-sudo make -C -s ./builddir install 1> /dev/null
+make -C ./builddir 1> /dev/null
+sudo make -C ./builddir install 1> /dev/null
 echo "Singularity successfully installed."
