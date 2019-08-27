@@ -17,7 +17,7 @@ jobs:
             - "c2:6a:c7:6e:77:f0:71:cd:66:00:e0:59:d2:93:a9:2c"
       - run: 
           command: |
-            #go get golang.org/dl/go1.12.9
+            go get golang.org/dl/go1.12.9
             #go version
             sudo apt-get update && sudo apt-get install -y build-essential libssl-dev uuid-dev libgpgme11-dev squashfs-tools libseccomp-dev pkg-config
             #wget https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz
