@@ -1,3 +1,4 @@
+import re
 import requests
 
 try:
@@ -42,7 +43,7 @@ def get_singularity_containers(url="https://depot.galaxyproject.org/singularity/
         def handle_starttag(self, tag, attrs):
             try:
                 for attr in attrs:
-                    if attr[0] == 'href' and attr[1] != '../':
+                    if attr[0] == 'href' and re.match('.*%3A.*', attr[1]):
                         self.containers.append(attr[1].replace('%3A', ':'))
             except IndexError:
                 pass
@@ -58,17 +59,17 @@ def get_missing_containers(quay_list, singularity_list, blacklist_file=None):
     """
     blacklist = []
     if blacklist_file:
-        blacklist = open(blacklist_file).read().split('\n')
-    return [n for n in quay_list if n not in singularity_list and n not in blacklist]
+        blacklist = open(blacklist_file).read().splitlines()
+    rgx = "(" + ")|(".join(blacklist) + ")"
+    return [n for n in quay_list if n not in singularity_list and not re.match(rgx, n)]
 
 ############
 ### MAIN ###
 ############
 
 u = get_quay_containers()
-print(u)
 
-lst = get_missing_containers(u, get_singularity_containers(), 'built_containers/blacklist.txt')
+lst = get_missing_containers(u, get_singularity_containers(), 'blacklist.txt')
 
 with open('build.sh', 'w') as f:
     for container in lst:
