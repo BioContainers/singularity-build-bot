@@ -81,7 +81,7 @@ SINGULARITY_DIRECTORIES = ["https://depot.galaxyproject.org/singularity/new/", "
 quay = get_quay_containers()
 sing = check_multiple_singularity_directories(SINGULARITY_DIRECTORIES)
 
-lst = get_missing_containers(quay, sing, 'blacklist.txt')
+lst = get_missing_containers(quay, sing, 'skip.list')
 
 with open('build.sh', 'w') as f:
     for container in lst:
