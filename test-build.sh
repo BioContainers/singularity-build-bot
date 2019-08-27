@@ -1,2 +1,0 @@
-singularity build built_containers/coreutils:8.25--1 docker://quay.io/biocontainers/coreutils:8.25--1
-singularity build built_containers/samtools:0.1.19--3 docker://quay.io/biocontainers/samtools:0.1.19--3
