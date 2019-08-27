@@ -53,6 +53,15 @@ def get_singularity_containers(url="https://depot.galaxyproject.org/singularity/
     parser.feed(index.text)
     return parser.containers
 
+def check_multiple_singularity_directories(urls):
+    """
+    For a list of urls, get Singularity containers for each and find the union
+    """
+    containers = []
+    for url in urls:
+        containers += get_singularity_containers(url)
+    return set(containers)
+
 def get_missing_containers(quay_list, singularity_list, blacklist_file=None):
     r"""
     Return list of quay containers that do not exist as singularity containers. Files stored in a blacklist will be ignored
@@ -67,9 +76,12 @@ def get_missing_containers(quay_list, singularity_list, blacklist_file=None):
 ### MAIN ###
 ############
 
-u = get_quay_containers()
+SINGULARITY_DIRECTORIES = ["https://depot.galaxyproject.org/singularity/new/", "https://depot.galaxyproject.org/singularity/bot/"] # dirs to check for containers
 
-lst = get_missing_containers(u, get_singularity_containers(), 'blacklist.txt')
+quay = get_quay_containers()
+sing = check_multiple_singularity_directories(SINGULARITY_DIRECTORIES)
+
+lst = get_missing_containers(quay, sing, 'blacklist.txt')
 
 with open('build.sh', 'w') as f:
     for container in lst:
