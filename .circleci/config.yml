@@ -23,7 +23,7 @@ jobs:
             #rm go1.12.9.linux-amd64.tar.gz
             go get -u github.com/golang/dep/cmd/dep
             go get -d github.com/sylabs/singularity
-            mkdir -p $HOME/go/src/github.com/sylabs
+            mkdir -p $HOME/go/src/github.com/sylabs && exit 0
             cd $HOME/go/src/github.com/sylabs
             wget https://github.com/sylabs/singularity/releases/download/v3.3.0/singularity-3.3.0.tar.gz
             tar -xzf singularity-3.3.0.tar.gz
