@@ -15,10 +15,11 @@ jobs:
             - "c2:6a:c7:6e:77:f0:71:cd:66:00:e0:59:d2:93:a9:2c"
       - run: 
           command: |
-            sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
+            sudo wget -q -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
             sudo apt-key adv --recv-key --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
-            sudo apt-get update
+            sudo apt-get update -qq
             sudo apt-get install -y singularity-container
+            singularity --version
             sudo pip install pipenv
             pipenv install requests
             pipenv run python get_container_list.py
