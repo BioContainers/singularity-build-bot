@@ -5,6 +5,7 @@ sudo apt-get update -qq && sudo apt-get -qq install -y build-essential libssl-de
 wget -q https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.12.9.linux-amd64.tar.gz
 rm go1.12.9.linux-amd64.tar.gz
+echo "Go successfully installed..."
 
 # get deps
 go get -u github.com/golang/dep/cmd/dep
@@ -17,5 +18,6 @@ wget -q https://github.com/sylabs/singularity/releases/download/v3.3.0/singulari
 tar -xzf singularity-3.3.0.tar.gz
 cd ./singularity
 ./mconfig
-make -C ./builddir
-sudo make -C ./builddir install
+make -C -s ./builddir
+sudo make -C -s ./builddir install
+echo "Singularity successfully installed..."

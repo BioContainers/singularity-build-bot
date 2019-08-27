@@ -17,11 +17,7 @@ jobs:
           command: |
             bash install_singularity.sh
             cd /home/circleci/project
-            sudo pip install -q pipenv
-            pipenv install requests
-            pipenv run python get_container_list.py
-            # scp singularity_import/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
-            # head -n 300 build.sh | tail -n 200 > build2.sh
-            bash build.sh
-            #scp ./built_containers/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
+            pip install requests
+            python get_container_list.py
+            sudo bash build.sh
           no_output_timeout: 3h # takes a while to get the quay containers, hopefully not 3h though
