@@ -17,7 +17,7 @@ jobs:
           command: |
             bash install_singularity.sh
             cd /home/circleci/project
-            pip install requests
+            pip -qq install requests
             python get_container_list.py
             sudo bash build.sh
           no_output_timeout: 3h # takes a while to get the quay containers, hopefully not 3h though
