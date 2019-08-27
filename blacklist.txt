@@ -1,2 +1,4 @@
 bioconductor-bsgenome.*
 galaxy-lib.*
+bcbio-nextgen-vm.*
+bcbio-nextgen.*
