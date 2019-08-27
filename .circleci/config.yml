@@ -15,28 +15,13 @@ jobs:
             - "c2:6a:c7:6e:77:f0:71:cd:66:00:e0:59:d2:93:a9:2c"
       - run: 
           command: |
-            sudo rm -rf /usr/local/go
-            sudo apt-get update && sudo apt-get install -y build-essential libssl-dev uuid-dev libgpgme11-dev squashfs-tools libseccomp-dev pkg-config
-            wget https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz
-            sudo tar -C /usr/local -xzvf go1.12.9.linux-amd64.tar.gz
-            rm go1.12.9.linux-amd64.tar.gz
-            go get -u github.com/golang/dep/cmd/dep
-            go get -d github.com/sylabs/singularity && exit 0
-            mkdir -p $HOME/go/src/github.com/sylabs
-            cd $HOME/go/src/github.com/sylabs
-            wget https://github.com/sylabs/singularity/releases/download/v3.3.0/singularity-3.3.0.tar.gz
-            tar -xzf singularity-3.3.0.tar.gz
-            cd ./singularity
-            ./mconfig
-            make -C ./builddir
-            sudo make -C ./builddir install
+            bash install_singularity.sh
             cd /home/circleci/project
-            singularity --version
             sudo pip install pipenv
             pipenv install requests
             pipenv run python get_container_list.py
             # scp singularity_import/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
-            head -n 300 build.sh | tail -n 200 > build2.sh
-            bash build2.sh
+            # head -n 300 build.sh | tail -n 200 > build2.sh
+            bash build.sh
             #scp ./built_containers/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
           no_output_timeout: 3h # takes a while to get the quay containers, hopefully not 3h though
