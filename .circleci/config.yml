@@ -3,6 +3,8 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2.1
+orbs:
+  singularity: singularity/singularity@1.0.8
 
 jobs:
   build:
@@ -15,6 +17,7 @@ jobs:
             - "c2:6a:c7:6e:77:f0:71:cd:66:00:e0:59:d2:93:a9:2c"
       - run: 
           command: |
+            pwd
             sudo wget -q -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
             sudo apt-key adv --recv-key --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
             sudo apt-get update -qq
