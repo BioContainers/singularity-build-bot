@@ -25,5 +25,5 @@ jobs:
             # scp singularity_import/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
             head -n 300 build.sh | tail -n 200 > build2.sh
             bash build2.sh
-            scp ./built_containers/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
+            #scp ./built_containers/*:* singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/
           no_output_timeout: 3h # takes a while to get the quay containers, hopefully not 3h though
