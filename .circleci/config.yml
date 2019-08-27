@@ -3,13 +3,11 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2.1
-orbs:
-  singularity: singularity/singularity@1.0.8
 
 jobs:
   build:
     machine:
-      image: "circleci/classic:201808-01"
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       - add_ssh_keys:
@@ -18,8 +16,6 @@ jobs:
       - run: 
           command: |
             sudo rm -rf /usr/local/go
-            #go get golang.org/dl/go1.12.9
-            #go version
             sudo apt-get update && sudo apt-get install -y build-essential libssl-dev uuid-dev libgpgme11-dev squashfs-tools libseccomp-dev pkg-config
             wget https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz
             sudo tar -C /usr/local -xzvf go1.12.9.linux-amd64.tar.gz
@@ -35,10 +31,6 @@ jobs:
             make -C ./builddir
             sudo make -C ./builddir install
             cd /home/circleci/project
-            #sudo wget -q -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
-            #sudo apt-key adv --recv-key --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
-            #sudo apt-get update -qq
-            #sudo apt-get install -y singularity-container
             singularity --version
             sudo pip install pipenv
             pipenv install requests
