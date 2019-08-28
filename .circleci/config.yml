@@ -19,5 +19,5 @@ jobs:
             cd /home/circleci/project
             pip -qq install requests
             python get_container_list.py
-            sudo bash build.sh
+            bash build.sh
           no_output_timeout: 3h # takes a while to get the quay containers, hopefully not 3h though
