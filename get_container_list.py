@@ -87,6 +87,6 @@ lst = get_missing_containers(quay, sing, 'skip.list')
 with open('build.sh', 'w') as f:
     c_no = 0
     for container in lst:
-        f.write("sudo singularity build {0} docker://quay.io/biocontainers/{0} 1> /dev/null && scp -q ./{0} singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/ && rm {0} && echo 'Container {1} ({0}) of {2} built.'\n".format(container, c_no, len(lst)))
+        f.write("sudo singularity build {0} docker://quay.io/biocontainers/{0} > /dev/null 2>&1 && scp -q ./{0} singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/ && rm {0} && echo 'Container {1} ({0}) of {2} built.'\n".format(container, c_no, len(lst)))
 
 print('{} containers found. Building...'.format(len(lst)))
