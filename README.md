@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/simonbray/build-singularity/tree/master.svg?style=svg)](https://circleci.com/gh/simonbray/build-singularity/tree/master)
+[![CircleCI](https://circleci.com/gh/BioContainers/singularity-build-bot/tree/master.svg?style=svg)](https://circleci.com/gh/BioContainers/singularity-build-bot/tree/master)
 
 # Singularity build bot
 
