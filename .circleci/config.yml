@@ -21,3 +21,19 @@ jobs:
             python get_container_list.py
             bash build.sh
           no_output_timeout: 3h # takes a while to get the quay containers, hopefully not 3h though
+
+
+workflows:
+  commit:
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+          cron: "30 13 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build
