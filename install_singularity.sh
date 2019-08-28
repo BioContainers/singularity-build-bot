@@ -1,5 +1,5 @@
 sudo rm -rf /usr/local/go # remove preinstalled go
-sudo apt-get update -qq && sudo apt-get -qq install -y build-essential libssl-dev uuid-dev libgpgme11-dev squashfs-tools libseccomp-dev pkg-config 1> /dev/null
+sudo apt-get update -qq && sudo apt-get -qq install -y build-essential libssl-dev uuid-dev libgpgme11-dev squashfs-tools libseccomp-dev pkg-config > /dev/null 2>&1
 echo "Requirements installed. Installing Go..."
 
 # install go
@@ -9,8 +9,8 @@ rm go1.12.9.linux-amd64.tar.gz
 echo "Go successfully installed. Installing Singularity..."
 
 # get deps
-go get -u github.com/golang/dep/cmd/dep
-go get -d github.com/sylabs/singularity && exit 0
+go get -u github.com/golang/dep/cmd/dep > /dev/null 2>&1
+go get -d github.com/sylabs/singularity > /dev/null 2>&1 && exit 0 
 
 # install singularity
 mkdir -p $HOME/go/src/github.com/sylabs
