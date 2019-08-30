@@ -21,7 +21,7 @@ def get_quay_containers(repository='biocontainers'):
 
     repos = repos_response.json()['repositories']
 
-    for repo in repos:
+    for repo in repos.sort(reverse=True):
         # logging.info(repo)
         tags_response = requests.get(
             "%s/%s/%s" % (QUAY_API_ENDPOINT, repository, repo['name']))
