@@ -2,3 +2,5 @@ bioconductor-bsgenome.*
 galaxy-lib.*
 bcbio-nextgen-vm.*
 bcbio-nextgen.*
+htslib*
+blasr_libcpp*
