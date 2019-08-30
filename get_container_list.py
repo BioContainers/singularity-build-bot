@@ -21,7 +21,7 @@ def get_quay_containers(repository='biocontainers'):
 
     repos = repos_response.json()['repositories']
 
-    for repo in sorted(repos, reverse=True):
+    for repo in repos:
         # logging.info(repo)
         tags_response = requests.get(
             "%s/%s/%s" % (QUAY_API_ENDPOINT, repository, repo['name']))
@@ -86,7 +86,7 @@ lst = get_missing_containers(quay, sing, 'skip.list')
 
 with open('build.sh', 'w') as f:
     c_no = 1
-    for container in lst:
+    for container in sorted(lst, reverse=True):
         f.write("sudo singularity build {0} docker://quay.io/biocontainers/{0} > /dev/null 2>&1 && scp -q ./{0} singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/bot/ && rm {0} && echo 'Container {1} ({0}) of {2} built.'\n".format(container, c_no, len(lst)))
         c_no += 1
 print('{} containers found. Building...'.format(len(lst)))
