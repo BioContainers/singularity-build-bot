@@ -76,7 +76,7 @@ def get_missing_containers(quay_list, singularity_list, blacklist_file=None):
 ### MAIN ###
 ############
 
-SINGULARITY_DIRECTORIES = ["https://depot.galaxyproject.org/singularity/new/", "https://depot.galaxyproject.org/singularity/bot/"] # dirs to check for containers
+SINGULARITY_DIRECTORIES = ["https://depot.galaxyproject.org/singularity/new/", "https://depot.galaxyproject.org/singularity/"] # dirs to check for containers
 
 print('Getting list of containers to build. This may take a while...')
 quay = get_quay_containers()
@@ -88,6 +88,6 @@ with open('build.sh', 'w') as f:
     c_no = 1
     import random
     for container in sorted(lst):
-        f.write("sudo singularity build {0} docker://quay.io/biocontainers/{0} > /dev/null 2>&1 && scp -q ./{0} singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {0} && echo 'Container {1} ({0}) of {2} built.'\n".format(container, c_no, len(lst)))
+        f.write("sudo singularity build {0} docker://quay.io/biocontainers/{0} > /dev/null 2>&1 && scp -q ./{0} singularity@orval.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/new/ && rm {0} && echo 'Container {1} ({0}) of {2} built.'\n".format(container, c_no, len(lst)))
         c_no += 1
 print('{} containers found. Building...'.format(len(lst)))
