@@ -7,4 +7,4 @@ are replicated as Singularity containers at https://depot.galaxyproject.org/sing
 
 The created containers are available on a [CernVM File System](https://cernvm.cern.ch/portal/filesystem). This is a POSIX read-only file system in user space that uses outgoing HTTP connections only, thereby avoiding most of the firewall issues of other network file systems. 
 
-Learn more about CVMFS and how you can get access to more than 25000 software containers in our CVMFS example setup: https://github.com/usegalaxy-eu/cvmfs-example
+Learn more about CVMFS and how you can get access to more than 50000 software containers in our CVMFS example setup: https://github.com/usegalaxy-eu/cvmfs-example
