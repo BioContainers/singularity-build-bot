@@ -19,7 +19,7 @@ echo "Downloading Singularity from https://github.com/sylabs/singularity/archive
 mkdir -p $HOME/go/src/github.com/sylabs
 cd $HOME/go/src/github.com/sylabs
 wget -q https://github.com/sylabs/singularity/archive/refs/tags/v3.3.0.tar.gz
-tar -xzf singularity-3.3.0.tar.gz
+tar -xzf v3.3.0.tar.gz
 cd ./singularity
 echo "Running mconfig, make, and make install..."
 ./mconfig 1> /dev/null
