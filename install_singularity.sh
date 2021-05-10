@@ -13,12 +13,12 @@ source ~/.bashrc
 echo "Go successfully installed."
 
 # get deps
-echo "Getting Singularity dependencies with go get..."
-go get -u github.com/golang/dep/cmd/dep > /dev/null 2>&1
-go get -d github.com/sylabs/singularity > /dev/null 2>&1 && exit 0 
+#echo "Getting Singularity dependencies with go get..."
+#go get -u github.com/golang/dep/cmd/dep > /dev/null 2>&1
+#go get -d github.com/sylabs/singularity > /dev/null 2>&1 && exit 0 
 
 # install singularity
-#echo "Downloading Singularity from https://github.com/sylabs/singularity/archive/refs/tags/v3.3.0.tar.gz and untarring..."
+echo "Downloading Singularity from https://github.com/sylabs/singularity..."
 #mkdir -p $HOME/go/src/github.com/sylabs
 #cd $HOME/go/src/github.com/sylabs
 #wget -q https://github.com/sylabs/singularity/archive/refs/tags/v3.3.0.tar.gz
