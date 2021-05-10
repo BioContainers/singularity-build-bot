@@ -19,18 +19,6 @@ echo "Go successfully installed."
 
 # install singularity
 echo "Downloading Singularity from https://github.com/sylabs/singularity..."
-#mkdir -p $HOME/go/src/github.com/sylabs
-#cd $HOME/go/src/github.com/sylabs
-#wget -q https://github.com/sylabs/singularity/archive/refs/tags/v3.3.0.tar.gz
-#tar -xzf v3.3.0.tar.gz
-#cd ./singularity-3.3.0
-#echo "Running mconfig, make, and make install..."
-#./mconfig 1> /dev/null
-#make -C ./builddir 1> /dev/null
-#sudo make -C ./builddir install 1> /dev/null
-#echo "Singularity successfully installed."
-
-
 mkdir -p ${GOPATH}/src/github.com/sylabs
 cd ${GOPATH}/src/github.com/sylabs
 git clone https://github.com/sylabs/singularity.git
