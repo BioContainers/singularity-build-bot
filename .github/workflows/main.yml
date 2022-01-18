@@ -2,7 +2,7 @@ name: Singularity container build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master,ghaction ]
   schedule:
     - cron: "0 4 * * *"
 
