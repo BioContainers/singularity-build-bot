@@ -15,7 +15,6 @@ jobs:
       - uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-            config: ${{ secrets.CONFIG }} # ssh_config; optional
 
       - name: Cache downloads
         uses: actions/cache@v1
