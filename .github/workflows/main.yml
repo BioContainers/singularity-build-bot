@@ -33,11 +33,10 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Install singularity
         run: |
-          cd singularity-build-bot
-          bash install_singularity.sh
+          bash singularity-build-bot/install_singularity.sh
       - name: Get list of containers to build
         run: |
           pip -qq install requests
-          python get_container_list.py
+          python singularity-build-bot/get_container_list.py
       - name: Build containers
         run: bash build.sh
