@@ -16,10 +16,6 @@ jobs:
           repository:  BioContainers/singularity-build-bot
           ref: master
           path: singularity-build-bot
-        
-      - uses: webfactory/ssh-agent@v0.4.1
-        with:
-          ssh-private-key: ${{ secrets.DEPOT_GALAXYPROJECT_ORG }}
 
       - name: Cache downloads
         uses: actions/cache@v1
@@ -42,5 +38,6 @@ jobs:
           python get_container_list.py
       - name: Build containers
         run: |
+          echo "${{ secrets.DEPOT_GALAXYPROJECT_ORG }}" > .ssh/github_actions
           cd singularity-build-bot
           bash build.sh
