@@ -39,6 +39,6 @@ jobs:
       - name: Build containers
         run: |
           cd singularity-build-bot
-          echo "${{ secrets.DEPOT_GALAXYPROJECT_ORG }}" > ssh_key
+          echo "${{ secrets.DEPOT_GALAXYPROJECT_ORG }}" > ssh_key && chmod 600 ssh_key
           cat build.sh
           bash build.sh
