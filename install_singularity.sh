@@ -7,8 +7,10 @@ echo "Downloading Go from https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz a
 wget -q https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.12.9.linux-amd64.tar.gz
 rm go1.12.9.linux-amd64.tar.gz
-echo 'export GOPATH=${HOME}/go' >> ~/.bashrc
-echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc
+#echo 'export GOPATH=${HOME}/go' >> ~/.bashrc
+#echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc
+export GOPATH=${HOME}/go
+export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
 source ~/.bashrc
 echo "Go successfully installed."
 

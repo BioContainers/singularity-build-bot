@@ -87,7 +87,6 @@ lst = sorted([c for c in lst if 'bioconductor' not in c]) + sorted([c for c in l
 
 with open('build.sh', 'w') as f:
     c_no = 1
-    for container in lst:
-        f.write("sudo singularity build {0} docker://quay.io/biocontainers/{0} > /dev/null 2>&1 && rsync -azqe ssh ./{0} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {0} && echo 'Container {1} ({0}) of {2} built.'\n".format(container, c_no, len(lst)))
-        c_no += 1
+    for c_no, container in enumerate(lst):
+        f.write(f"sudo singularity build {container} docker://quay.io/biocontainers/{container} > /dev/null 2>&1 && rsync -azq -e 'ssh -i ssh_key -o StrictHostKeyChecking=no' ./{container} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {container} && echo 'Container {c_no} ({container}) of {len(lst)} built.'\n")
 print('{} containers found. Building...'.format(len(lst)))

@@ -1,0 +1,44 @@
+name: Singularity container build
+
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    - cron: "0 4 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout bot code
+        uses: actions/checkout@v2
+        with:
+          repository:  BioContainers/singularity-build-bot
+          ref: master
+          path: singularity-build-bot
+
+      - name: Cache downloads
+        uses: actions/cache@v1
+        with:
+          path: |
+            ~/.cache/pip
+            /usr/local/bin/singularity
+            /usr/local/go/
+          key: cache-${{ matrix.python-version }}
+
+      # Runs a set of commands using the runners shell
+      - name: Install singularity
+        run: |
+          cd singularity-build-bot
+          bash install_singularity.sh
+      - name: Get list of containers to build
+        run: |
+          pip -qq install requests
+          cd singularity-build-bot
+          python get_container_list.py
+      - name: Build containers
+        run: |
+          cd singularity-build-bot
+          echo "${{ secrets.DEPOT_GALAXYPROJECT_ORG }}" > ssh_key && chmod 600 ssh_key
+          cat build.sh
+          bash build.sh
