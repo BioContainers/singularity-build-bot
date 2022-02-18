@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/BioContainers/singularity-build-bot/tree/master.svg?style=svg)](https://circleci.com/gh/BioContainers/singularity-build-bot/tree/master)
+[![Singularity builds](https://github.com/BioContainers/singularity-build-bot/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/BioContainers/singularity-build-bot/actions/workflows/main.yml?branch=master)
 
 # Singularity build bot
 
@@ -8,3 +8,7 @@ are replicated as Singularity containers at https://depot.galaxyproject.org/sing
 The created containers are available on a [CernVM File System](https://cernvm.cern.ch/portal/filesystem). This is a POSIX read-only file system in user space that uses outgoing HTTP connections only, thereby avoiding most of the firewall issues of other network file systems. 
 
 Learn more about CVMFS and how you can get access to more than 60000 software containers in our CVMFS example setup: https://github.com/usegalaxy-eu/cvmfs-example
+
+## Problems?
+
+Is a container missing? Or have you encountered something unexpected? Please [create an issue](https://github.com/BioContainers/singularity-build-bot/issues/new).
