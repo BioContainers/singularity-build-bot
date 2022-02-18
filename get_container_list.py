@@ -79,16 +79,14 @@ def get_missing_containers(quay_list, singularity_list, blacklist_file=None):
 SINGULARITY_DIRECTORIES = ["https://depot.galaxyproject.org/singularity/new/", "https://depot.galaxyproject.org/singularity/"] # dirs to check for containers
 
 print('Getting list of containers to build. This may take a while...')
-#quay = get_quay_containers()
-#sing = check_multiple_singularity_directories(SINGULARITY_DIRECTORIES)
+quay = get_quay_containers()
+sing = check_multiple_singularity_directories(SINGULARITY_DIRECTORIES)
 
-#lst = get_missing_containers(quay, sing, 'skip.list')
-#lst = sorted([c for c in lst if 'bioconductor' not in c]) + sorted([c for c in lst if 'bioconductor' in c])
-lst = ["ssuissero:1.0.1--hdfd78af_0"]
+lst = get_missing_containers(quay, sing, 'skip.list')
+lst = sorted([c for c in lst if 'bioconductor' not in c]) + sorted([c for c in lst if 'bioconductor' in c])
 
 with open('build.sh', 'w') as f:
-    #f.write(
     c_no = 1
     for c_no, container in enumerate(lst):
-        f.write(f"sudo singularity build {container} docker://quay.io/biocontainers/{container} > /dev/null 2>&1 && rsync -azq -e 'ssh -i ssh_key' ./{container} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {container} && echo 'Container {c_no} ({container}) of {len(lst)} built.'\n")
+        f.write(f"sudo singularity build {container} docker://quay.io/biocontainers/{container} > /dev/null 2>&1 && rsync -azq -e 'ssh -i ssh_key -o StrictHostKeyChecking=no' ./{container} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {container} && echo 'Container {c_no} ({container}) of {len(lst)} built.'\n")
 print('{} containers found. Building...'.format(len(lst)))
