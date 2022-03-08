@@ -85,8 +85,8 @@ class ContainerImageParser(HTMLParser):
         for attr, value in attrs:
             if attr != "href":
                 continue
-            if ":" in value:
-                self._images.append(value)
+            if "%3A" in value:
+                self._images.append(value.replace("%3A", ":", 1))
 
 
 class QuayImageFetcher:
