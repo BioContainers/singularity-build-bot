@@ -1,8 +1,8 @@
-bioconductor-bsgenome.*
-bioconductor-pd\..*
-bioconductor-mesh\..*
-bioconductor-phastcons100way\..*
-galaxy-lib.*
-bcbio-nextgen-vm.*
-bcbio-nextgen.*
-blasr_libcpp*
+bioconductor-bsgenome
+bioconductor-pd.
+bioconductor-mesh.
+bioconductor-phastcons100way.
+galaxy-lib
+bcbio-nextgen-vm
+bcbio-nextgen
+blasr_libcpp
