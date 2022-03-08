@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+
+"""Provide a command line tool for finding new container images and building them."""
+
+
 import argparse
 import asyncio
 import logging
@@ -20,16 +25,19 @@ logger = logging.getLogger()
 
 
 class RepositoryKind(str, Enum):
+    """Define known kinds of repositories."""
 
     image = "image"
 
 
 class RepositoryState(str, Enum):
+    """Define known states of a repository."""
 
     NORMAL = "NORMAL"
 
 
 class Repository(pydantic.BaseModel):
+    """Define the repository data of interest."""
 
     namespace: str
     name: str
@@ -39,17 +47,20 @@ class Repository(pydantic.BaseModel):
 
 
 class RepositoryListResponse(pydantic.BaseModel):
+    """Define the repository list data of interest."""
 
     repositories: List[Repository]
     next_page: Optional[str] = None
 
 
 class RepositoryTag(pydantic.BaseModel):
+    """Define the repository tag data of interest."""
 
     name: str
 
 
 class SingleRepositoryResponse(Repository):
+    """Define the single repository data of interest."""
 
     tags: Dict[str, RepositoryTag]
 
@@ -68,6 +79,7 @@ class ContainerImageParser(HTMLParser):
         return self._images.copy()
 
     def handle_starttag(self, tag: str, attrs: List[Tuple[str, str]]) -> None:
+        """Parse container images from a given tag and its attributes."""
         if tag != "a":
             return
         for attr, value in attrs:
@@ -86,6 +98,7 @@ class QuayImageFetcher:
         params: Optional[Dict[str, str]] = None,
         headers: Optional[Dict[str, str]] = None,
     ) -> List[str]:
+        """Fetch all container images and their tags."""
         if headers is None:
             headers = {
                 "Accept-Encoding": "gzip",
@@ -108,19 +121,31 @@ class QuayImageFetcher:
     async def _fetch_names(
         cls, client: httpx.AsyncClient, params: Dict[str, str]
     ) -> List[str]:
+        """Fetch one or more batches of container images."""
         names = []
-        logger.info("Fetching batch 1/?")
-        repos = await cls._fetch_repository_list(client=client, params=params)
-        names.extend((repo.name for repo in repos.repositories))
-        counter = 2
-        while repos.next_page:
-            logger.info("Fetching batch %d/?", counter)
-            repos = await cls._fetch_repository_list(
-                client=client, params={**params, "next_page": repos.next_page}
-            )
+        with cls._progress_spinner() as pbar:
+            task = pbar.add_task(description="Image Batch")
+            repos = await cls._fetch_repository_list(client=client, params=params)
             names.extend((repo.name for repo in repos.repositories))
-            counter += 1
+            pbar.update(task, advance=1)
+            while repos.next_page:
+                repos = await cls._fetch_repository_list(
+                    client=client, params={**params, "next_page": repos.next_page}
+                )
+                names.extend((repo.name for repo in repos.repositories))
+                pbar.update(task, advance=1)
         return names
+
+    @classmethod
+    def _progress_spinner(cls) -> rprog.Progress:
+        """Create a rich progress spinner."""
+        return rprog.Progress(
+            rprog.TextColumn("[bold blue]{task.description}", justify="right"),
+            rprog.SpinnerColumn(),
+            "{task.completed:,}/?",
+            " ",
+            rprog.TimeElapsedColumn(),
+        )
 
     @staticmethod
     @tenacity.retry(
@@ -133,6 +158,7 @@ class QuayImageFetcher:
     async def _fetch_repository_list(
         client: httpx.AsyncClient, params: Dict[str, str]
     ) -> RepositoryListResponse:
+        """Fetch a list of repositories and parse the response."""
         response = await client.get("repository", params=params)
         response.raise_for_status()
         return RepositoryListResponse.parse_obj(response.json())
@@ -146,13 +172,20 @@ class QuayImageFetcher:
         max_concurrency: int = 10,
         max_per_second: int = 10,
     ) -> List[str]:
+        """
+        Fetch the image tags for each given container image.
+
+        Fetching is performed concurrently, in a resilient manner, observing the given
+        limits.
+
+        """
         requests = [
             client.build_request(method="GET", url=f"repository/{repository}/{name}")
             for name in names
         ]
         images = []
         with cls._progress_bar() as pbar:
-            task = pbar.add_task(description="Repository Tags", total=len(requests))
+            task = pbar.add_task(description="Image Tags", total=len(requests))
             async with aiometer.amap(
                 partial(cls._fetch_single_repository, client),
                 requests,
@@ -188,6 +221,7 @@ class QuayImageFetcher:
     async def _fetch_single_repository(
         client: httpx.AsyncClient, request: httpx.Request
     ) -> SingleRepositoryResponse:
+        """Fetch a single repository resource and parse the response."""
         response = await client.send(request=request)
         response.raise_for_status()
         return SingleRepositoryResponse.parse_obj(response.json())
@@ -200,6 +234,7 @@ class SingularityImageFetcher:
         urls: Iterable[str],
         headers: Optional[Dict[str, str]] = None,
     ) -> List[str]:
+        """Parse container images from each given URL."""
         if headers is None:
             headers = {
                 "Accept-Encoding": "gzip",
@@ -226,7 +261,9 @@ class SingularityImageFetcher:
         before=tenacity.before_log(logger, logging.DEBUG),
     )
     def _fetch_images(client: httpx.Client, url: str) -> Optional[str]:
+        """Make a single GET request and return the response body as text."""
         response = client.get(url=url)
+        # FIXME: It seems that 404 indicates no new images. Or is `new` an outdated path?
         if response.status_code == 404:
             return
         response.raise_for_status()
@@ -238,6 +275,7 @@ def get_new_images(
     singularity_images: Iterable[str],
     denylist: Iterable[str],
 ) -> List[str]:
+    """Identify new images from the given lists."""
     denylist = tuple(denylist)
     result = frozenset(quay_images) - frozenset(singularity_images)
     # Filter new images using the deny list.
@@ -251,15 +289,17 @@ def get_new_images(
 
 
 def parse_denylist(filename: Path) -> List[str]:
+    """Parse the list of images to skip."""
     with filename.open() as handle:
         return [entry for line in handle.readlines() if (entry := line.strip())]
 
 
 def generate_build_script(filename: Path, images: List[str]) -> None:
+    """Generate a build script with one new image per line."""
     with filename.open("w") as handle:
-        for idx, name in enumerate(images, start=1):
+        for idx, img in enumerate(images, start=1):
             handle.write(
-                f"sudo singularity build {name} docker://quay.io/biocontainers/{name} > /dev/null 2>&1 && rsync -azq -e 'ssh -i ssh_key -o StrictHostKeyChecking=no' ./{name} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {name} && echo 'Container {name} built ({idx}/{len(images)}).'\n"
+                f"sudo singularity build {img} docker://quay.io/biocontainers/{img} > /dev/null 2>&1 && rsync -azq -e 'ssh -i ssh_key -o StrictHostKeyChecking=no' ./{img} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {img} && echo 'Container {img} built ({idx}/{len(images)}).'\n"
             )
 
 
@@ -321,6 +361,7 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
 
 
 def main(argv: Optional[List[str]] = None) -> None:
+    """Manage arguments and script execution."""
     args = parse_args(argv=argv)
     logging.basicConfig(
         level=args.log_level,
@@ -332,17 +373,25 @@ def main(argv: Optional[List[str]] = None) -> None:
     args.build_script.parent.mkdir(parents=True, exist_ok=True)
     logger.info("Fetching quay.io BioContainers images.")
     quay_images = asyncio.run(QuayImageFetcher.fetch_all(api_url=args.quay_api))
+    logger.info(f"Found {len(quay_images):,} images with tags.")
+    with open(".quay.log", "w") as handle:
+        for img in quay_images:
+            handle.write(f"{img}\n")
     logger.info("Fetching Singularity BioContainers images.")
     singularity_images = SingularityImageFetcher.fetch_all(
         urls=args.singularity.split(",")
     )
+    logger.info(f"Found {len(singularity_images):,} images with tags.")
+    with open(".singularity.log", "w") as handle:
+        for img in quay_images:
+            handle.write(f"{img}\n")
     logger.info("Parsing container image deny list.")
     denylist = parse_denylist(args.denylist)
     images = get_new_images(quay_images, singularity_images, denylist)
     if not images:
         logger.warning("No new images found.")
         return
-    logger.info("%d new images found. Generating build script.", len(images))
+    logger.info(f"{len(images):,} new images found. Generating build script.")
     generate_build_script(args.build_script, images)
 
 
