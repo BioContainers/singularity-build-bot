@@ -1,0 +1,5 @@
+aiometer
+httpx
+pydantic
+rich
+tenacity
