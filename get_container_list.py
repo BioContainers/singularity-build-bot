@@ -109,12 +109,12 @@ class QuayImageFetcher:
         cls, client: httpx.AsyncClient, params: Dict[str, str]
     ) -> List[str]:
         names = []
-        logger.debug("Fetching batch 1/?")
+        logger.info("Fetching batch 1/?")
         repos = await cls._fetch_repository_list(client=client, params=params)
         names.extend((repo.name for repo in repos.repositories))
         counter = 2
         while repos.next_page:
-            logger.debug("Fetching batch %d/?", counter)
+            logger.info("Fetching batch %d/?", counter)
             repos = await cls._fetch_repository_list(
                 client=client, params={**params, "next_page": repos.next_page}
             )
