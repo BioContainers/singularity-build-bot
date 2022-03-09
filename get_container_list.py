@@ -299,7 +299,7 @@ def get_new_images(
     )
     others = []
     bioconductor = []
-    for img in diff:
+    for img in result:
         if img.startswith("bioconductor"):
             bioconductor.append(img)
         else:
