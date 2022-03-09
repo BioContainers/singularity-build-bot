@@ -97,6 +97,7 @@ class QuayImageFetcher:
         repository: str = "biocontainers",
         params: Optional[Dict[str, str]] = None,
         headers: Optional[Dict[str, str]] = None,
+        log_file: Path = Path(".quay.log"),
     ) -> List[str]:
         """Fetch all container images and their tags."""
         if headers is None:
@@ -115,6 +116,7 @@ class QuayImageFetcher:
             images = await cls._fetch_tags(
                 client=client, repository=repository, names=names
             )
+        log_images(log_file=log_file, images=images)
         return images
 
     @classmethod
@@ -233,6 +235,7 @@ class SingularityImageFetcher:
         cls,
         urls: Iterable[str],
         headers: Optional[Dict[str, str]] = None,
+        log_file: Path = Path(".singularity.log"),
     ) -> List[str]:
         """Parse container images from each given URL."""
         if headers is None:
@@ -250,6 +253,10 @@ class SingularityImageFetcher:
                     images.extend(parser.images)
                 else:
                     logger.warning("No images found at '%s'.", url)
+        with log_file.open("w") as handle:
+            for img in images:
+                handle.write(f"{img}\n")
+        log_images(log_file=log_file, images=images)
         return images
 
     @staticmethod
@@ -267,14 +274,22 @@ class SingularityImageFetcher:
         return response.text
 
 
+def log_images(log_file: Path, images: List[str]) -> None:
+    with log_file.open("w") as handle:
+        for img in images:
+            handle.write(f"{img}\n")
+
+
 def get_new_images(
     quay_images: Iterable[str],
     singularity_images: Iterable[str],
     denylist: Iterable[str],
+    log_file: Path = Path(".diff.log"),
 ) -> List[str]:
     """Identify new images from the given lists."""
     denylist = tuple(denylist)
-    result = frozenset(quay_images) - frozenset(singularity_images)
+    result = sorted(frozenset(quay_images) - frozenset(singularity_images))
+    log_images(log_file=log_file, images=result)
     # Filter new images using the deny list.
     # FIXME: Is it necessary to sort bioconductor images to the end as before?
     return sorted(
@@ -366,17 +381,11 @@ def main(argv: Optional[List[str]] = None) -> None:
     logger.info("Fetching quay.io BioContainers images.")
     quay_images = asyncio.run(QuayImageFetcher.fetch_all(api_url=args.quay_api))
     logger.info(f"Found {len(quay_images):,} images with tags.")
-    with open(".quay.log", "w") as handle:
-        for img in quay_images:
-            handle.write(f"{img}\n")
     logger.info("Fetching Singularity BioContainers images.")
     singularity_images = SingularityImageFetcher.fetch_all(
         urls=args.singularity.split(",")
     )
     logger.info(f"Found {len(singularity_images):,} images with tags.")
-    with open(".singularity.log", "w") as handle:
-        for img in quay_images:
-            handle.write(f"{img}\n")
     logger.info("Parsing container image deny list.")
     denylist = parse_denylist(args.denylist)
     images = get_new_images(quay_images, singularity_images, denylist)
