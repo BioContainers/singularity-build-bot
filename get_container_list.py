@@ -263,9 +263,6 @@ class SingularityImageFetcher:
     def _fetch_images(client: httpx.Client, url: str) -> Optional[str]:
         """Make a single GET request and return the response body as text."""
         response = client.get(url=url)
-        # FIXME: It seems that 404 indicates no new images. Or is `new` an outdated path?
-        if response.status_code == 404:
-            return
         response.raise_for_status()
         return response.text
 
@@ -335,12 +332,7 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         help=f"The base URL for the quay.io API; must end with a '/' (default "
         f"'{default_quay_api}').",
     )
-    default_singularity_urls = ",".join(
-        [
-            "https://depot.galaxyproject.org/singularity/new/",
-            "https://depot.galaxyproject.org/singularity/",
-        ]
-    )
+    default_singularity_urls = "https://depot.galaxyproject.org/singularity/"
     parser.add_argument(
         "--singularity",
         metavar="URL[,URL]",
