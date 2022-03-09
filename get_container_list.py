@@ -288,16 +288,23 @@ def get_new_images(
 ) -> List[str]:
     """Identify new images from the given lists."""
     denylist = tuple(denylist)
-    result = sorted(frozenset(quay_images) - frozenset(singularity_images))
-    log_images(log_file=log_file, images=result)
+    diff = sorted(frozenset(quay_images) - frozenset(singularity_images))
+    log_images(log_file=log_file, images=diff)
     # Filter new images using the deny list.
-    # FIXME: Is it necessary to sort bioconductor images to the end as before?
-    return sorted(
+    result = sorted(
         filter(
             lambda image: not any(image.startswith(entry) for entry in denylist),
-            result,
+            diff,
         )
     )
+    others = []
+    bioconductor = []
+    for img in diff:
+        if img.startswith("bioconductor"):
+            bioconductor.append(img)
+        else:
+            others.append(img)
+    return others + bioconductor
 
 
 def parse_denylist(filename: Path) -> List[str]:
