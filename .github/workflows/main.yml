@@ -37,7 +37,7 @@ jobs:
           bash install_singularity.sh
       - name: Install Python dependencies
         run: |
-          python -m pip --requirement requirements.in
+          python -m pip install --requirement requirements.in
       - name: Get list of containers to build
         run: |
           python get_container_list.py
