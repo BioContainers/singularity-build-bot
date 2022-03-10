@@ -1,7 +1,7 @@
 bioconductor-bsgenome
-bioconductor-pd.
-bioconductor-mesh.
-bioconductor-phastcons100way.
+bioconductor-pd
+bioconductor-mesh
+bioconductor-phastcons100way
 galaxy-lib
 bcbio-nextgen-vm
 bcbio-nextgen
