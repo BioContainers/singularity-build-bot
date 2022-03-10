@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-"""Provide a command line tool for finding new container images and building them."""
+"""Provide a command line tool for building Singularity images from BioContainers."""
 
 
 import argparse
@@ -11,6 +11,7 @@ from enum import Enum
 from functools import partial
 from html.parser import HTMLParser
 from pathlib import Path
+from string import Template
 from typing import List, Tuple, Dict, Optional, Iterable
 
 import aiometer
@@ -313,13 +314,13 @@ def parse_denylist(filename: Path) -> List[str]:
         return [entry for line in handle.readlines() if (entry := line.strip())]
 
 
-def generate_build_script(filename: Path, images: List[str]) -> None:
-    """Generate a build script with one new image per line."""
-    with filename.open("w") as handle:
+def generate_build_script(filename: Path, images: List[str], template: Path) -> None:
+    """Generate a build script from provided templates."""
+    with template.open() as handle:
+        img_template = Template(handle.read())
+    with filename.open("a") as handle:
         for idx, img in enumerate(images, start=1):
-            handle.write(
-                f"sudo singularity build {img} docker://quay.io/biocontainers/{img} > /dev/null 2>&1 && rsync -azq -e 'ssh -i ssh_key -o StrictHostKeyChecking=no' ./{img} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {img} && echo 'Container {img} built ({idx}/{len(images)}).'\n"
-            )
+            handle.write(img_template.substitute(img=img, idx=idx, total=len(images)))
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
@@ -344,6 +345,15 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         default=default_build_script,
         type=Path,
         help=f"Output the Singularity build script (default '{default_build_script}').",
+    )
+    default_image_template = Path("image_template.sh")
+    parser.add_argument(
+        "--image-template",
+        metavar="PATH",
+        default=default_image_template,
+        type=Path,
+        help=f"The template for building a single Singularity image (default "
+        f"'{default_image_template}'). Uses Python `string.Template` syntax.",
     )
     default_quay_api = "https://quay.io/api/v1/"
     parser.add_argument(
@@ -384,6 +394,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         handlers=[RichHandler(markup=True, rich_tracebacks=True)],
     )
     assert args.denylist.is_file(), f"File not found '{args.denylist}'."
+    assert args.build_script.is_file(), f"File not found '{args.build_script}'."
+    assert args.image_template.is_file(), f"File not found '{args.image_template}'."
     args.build_script.parent.mkdir(parents=True, exist_ok=True)
     logger.info("Fetching quay.io BioContainers images.")
     quay_images = asyncio.run(QuayImageFetcher.fetch_all(api_url=args.quay_api))
@@ -400,7 +412,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         logger.warning("No new images found.")
         return
     logger.info(f"{len(images):,} new images found. Generating build script.")
-    generate_build_script(args.build_script, images)
+    generate_build_script(args.build_script, images, args.image_template)
 
 
 if __name__ == "__main__":
