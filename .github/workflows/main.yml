@@ -41,4 +41,5 @@ jobs:
           singularity-version: ${{ matrix.singularity-version }}
       - name: Build images
         run: |
+          echo "${{ secrets.DEPOT_GALAXYPROJECT_ORG }}" > ssh_key && chmod 600 ssh_key
           ./build.sh
