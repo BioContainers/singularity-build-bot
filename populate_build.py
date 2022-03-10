@@ -314,13 +314,11 @@ def parse_denylist(filename: Path) -> List[str]:
         return [entry for line in handle.readlines() if (entry := line.strip())]
 
 
-def generate_build_script(filename: Path, images: List[str], template: Path) -> None:
+def generate_build_script(filename: Path, images: List[str]) -> None:
     """Generate a build script from provided templates."""
-    with template.open() as handle:
-        img_template = Template(handle.read())
     with filename.open("a") as handle:
         for idx, img in enumerate(images, start=1):
-            handle.write(img_template.substitute(img=img, idx=idx, total=len(images)))
+            handle.write(f"\nbuild_singularity_image {img} {idx} {len(images)}\n")
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
@@ -345,15 +343,6 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         default=default_build_script,
         type=Path,
         help=f"Output the Singularity build script (default '{default_build_script}').",
-    )
-    default_image_template = Path("image_template.sh")
-    parser.add_argument(
-        "--image-template",
-        metavar="PATH",
-        default=default_image_template,
-        type=Path,
-        help=f"The template for building a single Singularity image (default "
-        f"'{default_image_template}'). Uses Python `string.Template` syntax.",
     )
     default_quay_api = "https://quay.io/api/v1/"
     parser.add_argument(
@@ -395,7 +384,6 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
     assert args.denylist.is_file(), f"File not found '{args.denylist}'."
     assert args.build_script.is_file(), f"File not found '{args.build_script}'."
-    assert args.image_template.is_file(), f"File not found '{args.image_template}'."
     args.build_script.parent.mkdir(parents=True, exist_ok=True)
     logger.info("Fetching quay.io BioContainers images.")
     quay_images = asyncio.run(QuayImageFetcher.fetch_all(api_url=args.quay_api))
@@ -412,7 +400,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         logger.warning("No new images found.")
         return
     logger.info(f"{len(images):,} new images found. Generating build script.")
-    generate_build_script(args.build_script, images, args.image_template)
+    generate_build_script(args.build_script, images)
 
 
 if __name__ == "__main__":
