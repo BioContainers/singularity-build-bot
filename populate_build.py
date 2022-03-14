@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-"""Provide a command line tool for finding new container images and building them."""
+"""Provide a command line tool for building Singularity images from BioContainers."""
 
 
 import argparse
@@ -11,6 +11,7 @@ from enum import Enum
 from functools import partial
 from html.parser import HTMLParser
 from pathlib import Path
+from string import Template
 from typing import List, Tuple, Dict, Optional, Iterable
 
 import aiometer
@@ -314,12 +315,10 @@ def parse_denylist(filename: Path) -> List[str]:
 
 
 def generate_build_script(filename: Path, images: List[str]) -> None:
-    """Generate a build script with one new image per line."""
-    with filename.open("w") as handle:
+    """Generate a build script from provided templates."""
+    with filename.open("a") as handle:
         for idx, img in enumerate(images, start=1):
-            handle.write(
-                f"sudo singularity build {img} docker://quay.io/biocontainers/{img} > /dev/null 2>&1 && rsync -azq -e 'ssh -i ssh_key -o StrictHostKeyChecking=no' ./{img} singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/ && rm {img} && echo 'Container {img} built ({idx}/{len(images)}).'\n"
-            )
+            handle.write(f"\nbuild_singularity_image {img} {idx} {len(images)}\n")
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
@@ -384,6 +383,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         handlers=[RichHandler(markup=True, rich_tracebacks=True)],
     )
     assert args.denylist.is_file(), f"File not found '{args.denylist}'."
+    assert args.build_script.is_file(), f"File not found '{args.build_script}'."
     args.build_script.parent.mkdir(parents=True, exist_ok=True)
     logger.info("Fetching quay.io BioContainers images.")
     quay_images = asyncio.run(QuayImageFetcher.fetch_all(api_url=args.quay_api))
