@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 """Provide a command line tool for building Singularity images from BioContainers."""
 
 
