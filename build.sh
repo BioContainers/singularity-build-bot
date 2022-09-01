@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -u
 
 build_singularity_image() {
