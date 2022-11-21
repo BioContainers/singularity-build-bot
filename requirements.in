@@ -1,5 +1,5 @@
 aiometer
-httpx
+httpx==0.23.0
 pydantic
 rich
 tenacity
