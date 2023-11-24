@@ -14,4 +14,3 @@ build_singularity_image() {
     singularity cache clean --type blob --force
     echo "Container ${image} built (${index}/${total})."
 }
-
