@@ -3,6 +3,6 @@ bioconductor-pd
 bioconductor-mesh
 bioconductor-phastcons100way
 galaxy-lib
+blasr_libcpp
 bcbio-nextgen-vm
 bcbio-nextgen
-blasr_libcpp
