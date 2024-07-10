@@ -4,5 +4,5 @@ bioconductor-mesh
 bioconductor-phastcons100way
 galaxy-lib
 blasr_libcpp
-bcbio-nextgen-vm
 bcbio-nextgen
+bcbio-nextgen-vm
