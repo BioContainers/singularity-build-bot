@@ -33,6 +33,8 @@ Singularity containers hosted on depot.galaxyproject.org are further mirrored an
 This infrastructure optimizes access to containers globally, providing end-users with a reliable and efficient way to consume these resources.
 The CVMFS distribution model parallels the accessibility of [quay.io/biocontainers](https://quay.io/organization/biocontainers), ensuring that users can seamlessly integrate these resources into their workflows.
 
+![grafik](https://github.com/user-attachments/assets/d784c33f-aa92-47fa-a8fb-564f0cf69035)
+
 
 ## Problems?
 
