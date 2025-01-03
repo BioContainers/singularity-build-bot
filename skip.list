@@ -10,7 +10,7 @@ bioconductor-txdb.
 bioconductor-epitxdb.
 bioconductor-qdnaseq.
 bioconductor-rnbeads.
-bioconductor-ensdb.*
+bioconductor-ensdb.
 bioconductor-mus
 bioconductor-pwmenrich.
 bioconductor-alternativesplicingevents.
@@ -21,8 +21,12 @@ bioconductor-huexexonprobesetlocation
 bioconductor-illuminahumanmethylation27kanno.
 bioconductor-illuminahumanmethylation450kanno.
 bioconductor-illuminahumanmethylationepicanno.
-bioconductor-mafdb.topmed.freeze5.
+bioconductor-mafdb.
 bioconductor-pcagopromoter.
 bioconductor-qdnaseq.
 bioconductor-rcistarget.
 bioconductor-tcgawgbsdata.
+bioconductor-snplocs.
+bioconductor-mafh5.
+bioconductor-chipxpressdata
+bioconductor-phastcons7way
