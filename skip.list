@@ -7,12 +7,14 @@
 # on the singularity package index/folder and then grepping portions out of it, as needed, e.g. with:
 > python remove-old-builds.py ./ | grep bioconductor | grep r3 | sort
 
-#bioconductor-bsgenome
-#galaxy-lib
-#bioconductor-pd
-#bioconductor-mesh
-#bioconductor-phastcons100way
-#blasr_libcpp
+bioconductor-bsgenome
+galaxy-lib
+# everything that starts with lib*
+lib
+bioconductor-pd
+bioconductor-mesh
+bioconductor-phastcons100way
+blasr_libcpp
 bcbio-nextgen
 bcbio-nextgen-vm
 bioconductor-txdb.
