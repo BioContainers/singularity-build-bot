@@ -310,7 +310,7 @@ def get_new_images(
 def parse_denylist(filename: Path) -> List[str]:
     """Parse the list of images to skip."""
     with filename.open() as handle:
-        return [entry for line in handle.readlines() if (entry := line.strip())]
+        return [entry for line in handle.readlines() if (entry := line.strip() and not line.startswith('#'))]
 
 
 def generate_build_script(filename: Path, images: List[str]) -> None:
