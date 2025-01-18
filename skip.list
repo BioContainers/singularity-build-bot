@@ -41,7 +41,11 @@ bioconductor-snplocs.
 bioconductor-mafh5.
 bioconductor-chipxpressdata
 bioconductor-phastcons7way
-
+bioconductor-worm
+bioconductor-xenopus
+bioconductor-xlaevis
+snakemake-storage-plugin
+snakemake-executor-plugin
 
 #
 # Skip exlicit Bioconductor packages with very old R versions.
