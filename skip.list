@@ -2,6 +2,10 @@
 # We skip those packages from our Singularity index to safe some space.
 # If you need a package or a package group from this list, please create a PR and remove / comment-out the line.
 
+# Adding packages to this list can be done by running
+# > python remove-old-builds.py ./
+# on the singularity package index/folder and then grepping portions out of it, as needed, e.g. with:
+> python remove-old-builds.py ./ | grep bioconductor | grep r3 | sort
 
 #bioconductor-bsgenome
 #galaxy-lib
