@@ -9,7 +9,7 @@ organization on Quay and we want to ensure they are also available via Singulari
 The created containers are available on a [CernVM File System](https://cernvm.cern.ch/portal/filesystem). This is a POSIX read-only file system in user
 space that uses outgoing HTTP connections only, thereby avoiding most of the firewall issues of other network file systems. 
 
-Learn more about CVMFS and how you can get access to more than 97000 software containers in our CVMFS example setup: https://github.com/usegalaxy-eu/cvmfs-example
+Learn more about CVMFS and how you can get access to more than 110000 software containers in our CVMFS example setup: https://github.com/usegalaxy-eu/cvmfs-example
 
 ## Broader context
 
