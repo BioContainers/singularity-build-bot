@@ -292,8 +292,27 @@ bioconductor-targetscan.hs.eg
 bioconductor-targetscan.mm.eg
 bioconductor-u133x3p
 lbioconductor-rgu34a
+bioconductor-appreci8r
+bioconductor-trena
+bioconductor-ataccogaps
+bioconductor-chipxpress
+bioconductor-flowsorted.
+bioconductor-primirtss
+bioconductor-rarevariantvis
+bioconductor-cfdnapro
+bioconductor-champ
+bioconductor-chipcomp
+bioconductor-epiregulon
+bioconductor-katdetectr
+bioconductor-sctensor
+bioconductor-uncoverapplib
 snakemake-storage-plugin
 snakemake-executor-plugin
+antismash:5.1.2--py_1
+antismash:5.1.2--py_2
+deepvariant:1.1.0--py36hf3e76ba_1
+deepvariant:1.1.0--py36hf3e76ba_0
+
 
 #
 # Skip exlicit Bioconductor packages with very old R versions.
@@ -4183,4 +4202,5 @@ bioconductor-zlibbioc:1.30.0--r351h14c3975_0
 #
 #
 #
+
 
