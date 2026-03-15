@@ -12,6 +12,7 @@ bioconductor-bsgenome
 galaxy-lib
 # everything that starts with lib*
 lib
+snakemake
 bioconductor-pd
 bioconductor-mesh
 bioconductor-phastcons100way
