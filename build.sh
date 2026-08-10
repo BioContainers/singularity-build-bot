@@ -6,7 +6,7 @@ build_singularity_image() {
     local index=${2}
     local total=${3}
     local source=${4:-'docker://quay.io/biocontainers'}
-    local destination=${5:-'singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/root/singularity/'}
+    local destination=${5:-'singularity@depot.galaxyproject.org:/srv/nginx/depot.galaxyproject.org/singularity/'}
 
     singularity build "${image}" "${source}/${image}" > /dev/null 2>&1
     rsync -azq -e 'ssh -i ssh_key -o StrictHostKeyChecking=no' "./${image}" "${destination}"
