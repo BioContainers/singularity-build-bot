@@ -20,8 +20,8 @@ jobs:
       matrix:
         python-version:
           - '3.12'
-        singularity-version:
-          - '3.8.3'
+        apptainer-version:
+          - 'latest'
     steps:
       - name: Checkout bot code
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
         with:
           path: |
             ~/.cache/pip
-          key: ${{ runner.os }}_Python-${{ matrix.python-version }}_Singularity-${{ matrix.singularity-version }}
+          key: ${{ runner.os }}_Python-${{ matrix.python-version }}_Apptainer-${{ matrix.apptainer-version }}
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
@@ -45,10 +45,10 @@ jobs:
           else
             ./populate_build.py
           fi
-      - name: Set up Singularity ${{ matrix.singularity-version }}
-        uses: eWaterCycle/setup-singularity@v7
+      - name: Set up Apptainer ${{ matrix.apptainer-version }}
+        uses: eWaterCycle/setup-apptainer@v3
         with:
-          singularity-version: ${{ matrix.singularity-version }}
+          apptainer-version: ${{ matrix.apptainer-version }}
       - name: Build images
         run: |
           echo "${{ secrets.DEPOT_GALAXYPROJECT_ORG }}" > ssh_key && chmod 600 ssh_key
